@@ -300,8 +300,7 @@ test "detectVersion GP5" {
 }
 
 test "detectVersion unknown returns null" {
-    const buf = "INVALID_FORMAT_HEADER_BYTES_HERE!!".*;
-    try std.testing.expect(detectVersion(&buf) == null);
+    try std.testing.expect(detectVersion("INVALID_FORMAT_HEADER_BYTES_HERE!!") == null);
 }
 
 test "detectVersion too short returns null" {

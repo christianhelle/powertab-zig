@@ -1,6 +1,7 @@
 const std = @import("std");
 
-/// Note duration expressed in MIDI ticks (quarter = 240 ticks).
+/// Note duration expressed in MIDI ticks at the standard PowerTab resolution
+/// of 960 pulses per quarter note (PPQ).  This matches `SongInfo.ticks_per_beat`.
 pub const Duration = enum(u8) {
     whole = 0,
     half = 1,
@@ -12,25 +13,25 @@ pub const Duration = enum(u8) {
 
     pub fn ticks(self: Duration) u32 {
         return switch (self) {
-            .whole => 960,
-            .half => 480,
-            .quarter => 240,
-            .eighth => 120,
-            .sixteenth => 60,
-            .thirty_second => 30,
-            .sixty_fourth => 15,
+            .whole => 3840,
+            .half => 1920,
+            .quarter => 960,
+            .eighth => 480,
+            .sixteenth => 240,
+            .thirty_second => 120,
+            .sixty_fourth => 60,
         };
     }
 
     pub fn fromTicks(t: u32) ?Duration {
         return switch (t) {
-            960 => .whole,
-            480 => .half,
-            240 => .quarter,
-            120 => .eighth,
-            60 => .sixteenth,
-            30 => .thirty_second,
-            15 => .sixty_fourth,
+            3840 => .whole,
+            1920 => .half,
+            960 => .quarter,
+            480 => .eighth,
+            240 => .sixteenth,
+            120 => .thirty_second,
+            60 => .sixty_fourth,
             else => null,
         };
     }
@@ -112,10 +113,10 @@ test "Duration.ticks roundtrip" {
 }
 
 test "Duration.ticks values" {
-    try std.testing.expectEqual(@as(u32, 960), Duration.whole.ticks());
-    try std.testing.expectEqual(@as(u32, 480), Duration.half.ticks());
-    try std.testing.expectEqual(@as(u32, 240), Duration.quarter.ticks());
-    try std.testing.expectEqual(@as(u32, 120), Duration.eighth.ticks());
+    try std.testing.expectEqual(@as(u32, 3840), Duration.whole.ticks());
+    try std.testing.expectEqual(@as(u32, 1920), Duration.half.ticks());
+    try std.testing.expectEqual(@as(u32, 960), Duration.quarter.ticks());
+    try std.testing.expectEqual(@as(u32, 480), Duration.eighth.ticks());
 }
 
 test "Duration.fromTicks returns null for unknown value" {

@@ -15,10 +15,11 @@ pub const Cursor = struct {
         return .{ .staff = 0, .measure = 0, .position = 0, .string = 0 };
     }
 
-    /// Move the cursor left (to the previous beat), wrapping to the
-    /// previous measure when necessary.  Returns false if already at the start.
+    /// Move the cursor left (to the previous beat).  When at position 0, wraps
+    /// to position 0 of the previous measure.  Returns false if already
+    /// at the very beginning (staff 0, measure 0, position 0).
     pub fn moveLeft(self: *Cursor, positions_in_measure: usize) bool {
-        _ = positions_in_measure;
+        _ = positions_in_measure; // kept for API compatibility
         if (self.position > 0) {
             self.position -= 1;
             return true;
@@ -41,19 +42,19 @@ pub const Cursor = struct {
         return false;
     }
 
-    /// Move cursor up (to a higher string index = lower-pitched string).
-    pub fn moveUp(self: *Cursor, string_count: usize) bool {
-        if (self.string + 1 < string_count) {
-            self.string += 1;
+    /// Move cursor **up** on screen (to a lower string index = higher-pitched string).
+    pub fn moveUp(self: *Cursor) bool {
+        if (self.string > 0) {
+            self.string -= 1;
             return true;
         }
         return false;
     }
 
-    /// Move cursor down (to a lower string index = higher-pitched string).
-    pub fn moveDown(self: *Cursor) bool {
-        if (self.string > 0) {
-            self.string -= 1;
+    /// Move cursor **down** on screen (to a higher string index = lower-pitched string).
+    pub fn moveDown(self: *Cursor, string_count: usize) bool {
+        if (self.string + 1 < string_count) {
+            self.string += 1;
             return true;
         }
         return false;
@@ -114,13 +115,20 @@ test "Cursor.moveLeft at start returns false" {
     try std.testing.expect(!c.moveLeft(4));
 }
 
+test "Cursor.moveLeft wraps to beginning of previous measure" {
+    var c = Cursor{ .staff = 0, .measure = 1, .position = 0, .string = 0 };
+    try std.testing.expect(c.moveLeft(4));
+    try std.testing.expectEqual(@as(usize, 0), c.measure);
+    try std.testing.expectEqual(@as(usize, 0), c.position);
+}
+
 test "Cursor.moveUp and moveDown" {
-    var c = Cursor.init(); // string = 0 (highest)
-    try std.testing.expect(c.moveUp(6));
+    var c = Cursor.init(); // string = 0 (highest, top of screen)
+    try std.testing.expect(!c.moveUp()); // already at top string (index 0)
+    try std.testing.expect(c.moveDown(6));
     try std.testing.expectEqual(@as(usize, 1), c.string);
-    try std.testing.expect(c.moveDown());
+    try std.testing.expect(c.moveUp());
     try std.testing.expectEqual(@as(usize, 0), c.string);
-    try std.testing.expect(!c.moveDown()); // already at 0
 }
 
 test "Cursor.nextMeasure and prevMeasure" {

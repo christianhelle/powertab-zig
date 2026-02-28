@@ -74,9 +74,9 @@ pub const Measure = struct {
         return total;
     }
 
-    /// Returns the expected tick duration given the time signature.
+    /// Returns the expected tick duration given the time signature (at 960 PPQ).
     pub fn expectedTicks(self: Measure) u32 {
-        const quarter_ticks: u32 = 240;
+        const quarter_ticks: u32 = 960;
         return quarter_ticks * 4 * @as(u32, self.numerator) / @as(u32, self.denominator);
     }
 
@@ -102,17 +102,17 @@ test "Position.hasString and noteOnString" {
 
 test "Measure.expectedTicks 4/4" {
     const m = Measure.init(4, 4, &.{});
-    try std.testing.expectEqual(@as(u32, 960), m.expectedTicks());
+    try std.testing.expectEqual(@as(u32, 3840), m.expectedTicks());
 }
 
 test "Measure.expectedTicks 3/4" {
     const m = Measure.init(3, 4, &.{});
-    try std.testing.expectEqual(@as(u32, 720), m.expectedTicks());
+    try std.testing.expectEqual(@as(u32, 2880), m.expectedTicks());
 }
 
 test "Measure.expectedTicks 6/8" {
     const m = Measure.init(6, 8, &.{});
-    try std.testing.expectEqual(@as(u32, 720), m.expectedTicks());
+    try std.testing.expectEqual(@as(u32, 2880), m.expectedTicks());
 }
 
 test "Measure.isComplete with quarter notes in 4/4" {
@@ -142,6 +142,6 @@ test "Measure.totalTicks" {
         Position.init(.eighth, &n, false),
     };
     const m = Measure.init(4, 4, &positions);
-    // 480 + 240 + 120 = 840
-    try std.testing.expectEqual(@as(u32, 840), m.totalTicks());
+    // 1920 + 960 + 480 = 3360
+    try std.testing.expectEqual(@as(u32, 3360), m.totalTicks());
 }

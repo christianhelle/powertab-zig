@@ -68,13 +68,13 @@ pub const Editor = struct {
     }
 
     pub fn moveCursorUp(self: *Editor) void {
-        if (self.currentGuitar()) |g| {
-            _ = self.cursor.moveUp(g.string_count);
-        }
+        _ = self.cursor.moveUp();
     }
 
     pub fn moveCursorDown(self: *Editor) void {
-        _ = self.cursor.moveDown();
+        if (self.currentGuitar()) |g| {
+            _ = self.cursor.moveDown(g.string_count);
+        }
     }
 
     pub fn nextMeasure(self: *Editor) void {

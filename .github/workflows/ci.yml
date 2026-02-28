@@ -10,6 +10,8 @@ jobs:
   test:
     name: Test (Zig ${{ matrix.zig-version }})
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         zig-version: ["0.14.0"]
@@ -27,6 +29,9 @@ jobs:
   build:
     name: Build (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      actions: write
     strategy:
       fail-fast: false
       matrix:

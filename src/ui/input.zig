@@ -22,8 +22,8 @@ fn processNormalMode(editor: *Editor) void {
     // Navigation
     if (c.IsKeyPressed(c.KEY_LEFT) or c.IsKeyPressed(c.KEY_H)) editor.moveCursorLeft();
     if (c.IsKeyPressed(c.KEY_RIGHT) or c.IsKeyPressed(c.KEY_L)) editor.moveCursorRight();
-    if (c.IsKeyPressed(c.KEY_UP) or c.IsKeyPressed(c.KEY_K)) editor.moveCursorDown();
-    if (c.IsKeyPressed(c.KEY_DOWN) or c.IsKeyPressed(c.KEY_J)) editor.moveCursorUp();
+    if (c.IsKeyPressed(c.KEY_UP) or c.IsKeyPressed(c.KEY_K)) editor.moveCursorUp();
+    if (c.IsKeyPressed(c.KEY_DOWN) or c.IsKeyPressed(c.KEY_J)) editor.moveCursorDown();
     if (c.IsKeyPressed(c.KEY_LEFT_BRACKET)) editor.prevMeasure();
     if (c.IsKeyPressed(c.KEY_RIGHT_BRACKET)) editor.nextMeasure();
 

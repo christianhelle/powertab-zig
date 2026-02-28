@@ -63,8 +63,7 @@ pub fn drawFrame(
 
     // --- Staff area ---
     const staff_area_top = HEADER_H;
-    const staff_area_bottom = screen_h - STATUS_H;
-    _ = staff_area_bottom;
+    // staff_area_bottom is reserved for future vertical clipping / scroll bounds
 
     var staff_y = staff_area_top + STAFF_TOP_PAD - state.scroll_y;
     for (song.staves, 0..) |st, si| {
@@ -164,7 +163,7 @@ fn drawMeasure(
     string_count: usize,
     staff_top: i32,
     measure_x: i32,
-    guitar: ?*const Guitar,
+    guitar: ?*const Guitar, // reserved for future string-name labels
 ) void {
     _ = guitar;
     for (m.positions, 0..) |pos, pi| {
