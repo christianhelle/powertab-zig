@@ -1,0 +1,44 @@
+name: powertab
+base: core22
+version: 0.1.0
+summary: A high-performance guitar tablature editor
+description: |
+  PowerTab Editor reimplemented in Zig for maximum performance.
+  Supports PowerTab (.ptb) and Guitar Pro (.gp3/.gp4/.gp5) file formats.
+  Features an immediate-mode rendering approach for responsive UI.
+
+grade: devel
+confinement: strict
+
+apps:
+  powertab:
+    command: bin/powertab
+    plugs:
+      - home
+      - removable-media
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - opengl
+
+parts:
+  zig:
+    plugin: nil
+    build-packages:
+      - curl
+      - xz-utils
+    override-build: |
+      snap install zig --classic --edge
+
+  powertab:
+    after: [zig]
+    plugin: nil
+    source: .
+    override-build: |
+      export PATH="$SNAPCRAFT_STAGE/zig:$PATH"
+      zig build -Doptimize=ReleaseFast
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cp zig-out/bin/powertab $SNAPCRAFT_PART_INSTALL/bin/
+    stage-packages:
+      - libc6
